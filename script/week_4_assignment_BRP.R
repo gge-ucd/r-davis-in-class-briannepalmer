@@ -17,4 +17,4 @@ as.character(surveys_long_feet$hindfoot_length)
 
 #Plot the hindfoot_lengths in a histogram (if this doesn’t work, just leave it, and think about it during Part II of the assignment, wink wink).
 
-hist(x = surveys_long_feet$hindfoot_length)
+hist(surveys_long_feet$hindfoot_length)
