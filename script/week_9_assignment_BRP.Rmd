@@ -1,0 +1,56 @@
+---
+title: "week9_assignment_BRP"
+author: "Brianne Palmer"
+date: "March 10, 2019"
+output: 
+  html_document:
+    self_contained: no
+---
+
+Hi partner! I am studying the succession of *biological soil crusts* after fire on San Clemente Island. My primary questions are: **does the microbial community of biocrusts change during succession and how does this impact ecosystem function?** Additionally, I am looking at the interactions between biocrusts and rare plants. Here in Davis, I am working on an additional project to develop methods of biocrust restoration in grasslands. Biocrusts are really interesting and complex microbial communities and we are barely scratching the surface on their functionality in drylands. I'm excited to add to this knowledge here in California!
+
+![Biocrust from the Colorado Plateau, spring 2017](/figures/biocrust.jpg)
+
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+glimpse(storms)
+storms <- storms
+
+# create plotly map 
+library(plotly)
+ggplotly(storms %>%  
+  ggplot()+
+  geom_point(aes(wind, pressure, color = status))
+)
+
+# Create a html table 
+table <- storms %>%
+  drop_na(ts_diameter, hu_diameter) %>% 
+  group_by(status) %>% 
+  summarise(mean_wind = mean(wind), mean_pressure = mean(pressure), mean_ts = mean(ts_diameter), mean_hu = mean(hu_diameter))
+
+# round the table 
+table$mean_wind<- round(table$mean_wind, digits = 2)
+table$mean_pressure <- round(table$mean_pressure, digits = 2)
+table$mean_ts <- round(table$mean_ts, digits = 2)
+table$mean_hu <- round(table$mean_hu, digits=2)
+
+htmlTable::htmlTable(table)
+
+
+```
+CHALLENGE Find the duration, in number of days, of every hurricane from 2010 and later, and then use one of the map functions from  purrr to write a sentence saying “Hurricane X lasted Y days” for each of these storms. You can look for some help with these functions here and here.
+
+```{r warning=FALSE, message=FALSE}
+hurr_len <- storms %>% 
+  filter(status == "hurricane", year >= 2010) %>% 
+  group_by(name, year) %>% 
+  summarise(num_days = diff(range(day)))
+  
+map2_chr(.x = hurr_len$name, .y = hurr_len$num_days, function(x,y) paste("Hurricane", x, "lasted", y, "days"))
+```
+
+
+
+
